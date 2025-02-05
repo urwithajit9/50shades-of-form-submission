@@ -1,6 +1,14 @@
 "use client";
 import { FormData } from "./type";
 import { useState } from "react";
+import {
+  validateName,
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validateSalary,
+  validatePhone,
+} from "./validate_utils";
 
 interface FormProps {
   onSubmit: (formData: FormData) => void;
@@ -12,25 +20,48 @@ export default function RegisterForm({ onSubmit }: FormProps) {
     password: "",
     password_confirmation: "",
     phone_number: "",
-    salary: 0,
+    salary: "",
   });
+  const [error, setError] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+     
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    const newErrors: Record<string, string> = {
+      name: validateName(formData.name),
+      email: validateEmail(formData.email),
+      password: validatePassword(formData.password),
+      password_confirmation: validateConfirmPassword(formData.password, formData.password_confirmation),
+      salary: validateSalary(formData.salary),
+      phone_number: validatePhone(formData.phone_number),
+    };
+
+  
+    // If no errors, submit the form
+    if (Object.values(newErrors).every((error) => error === "")) {
+      onSubmit(formData);
+      console.log("Form submitted successfully!", formData);
+      
+    }
+    else {
+      // If there are errors, log them to the console
+      setError(true);
+      console.log("Form has errors!", newErrors);
+    }
+    
     setFormData({
       name: "",
       email: "",
       password: "",
       password_confirmation: "",
       phone_number: "",
-      salary: 0,
+      salary: "",
     }); // Reset form
   };
 
@@ -56,6 +87,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Name"
         />
+       
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Email<span className="text-red-500">*</span></label>
@@ -68,6 +100,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Email"
         />
+        
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Password<span className="text-red-500">*</span></label>
@@ -80,6 +113,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Password"
         />
+        
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Confirm Password<span className="text-red-500">*</span></label>
@@ -92,6 +126,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Confirm Password"
         />
+      
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Phone Number<span className="text-red-500">*</span></label>
@@ -104,6 +139,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Phone Number"
         />
+       
       </div>
 
       <div className="mb-4">
@@ -111,13 +147,15 @@ export default function RegisterForm({ onSubmit }: FormProps) {
         <input
           className={input_tailwind_classes}
           name="salary"
-          type="number"
+          type="text"
           required
           value={formData.salary}
           onChange={handleChange}
           placeholder="Salary"
         />
+      
       </div>
+      {error && <p className="text-red-500 text-xs italic">There are errors in fields.</p>}
 
       <div className="flex items-center justify-between">
         <button
