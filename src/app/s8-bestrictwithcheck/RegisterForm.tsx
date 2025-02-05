@@ -81,7 +81,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Name"
         />
-        {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
+        {errors.name && <p className="text-red-500 text-xs italic mt-2">{errors.name}</p>}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Email<span className="text-red-500">*</span></label>
@@ -94,7 +94,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Email"
         />
-        {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
+        {errors.email && <p className="text-red-500 text-xs italic mt-2">{errors.email}</p>}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Password<span className="text-red-500">*</span></label>
@@ -107,7 +107,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Password"
         />
-        {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}
+        {errors.password && <p className="text-red-500 text-xs italic mt-2">{errors.password}</p>}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Confirm Password<span className="text-red-500">*</span></label>
@@ -120,7 +120,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Confirm Password"
         />
-        {errors.password_confirmation && <p className="text-red-500 text-xs italic">{errors.password_confirmation}</p>}
+        {errors.password_confirmation && <p className="text-red-500 text-xs italic mt-2">{errors.password_confirmation}</p>}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>Phone Number<span className="text-red-500">*</span></label>
@@ -133,7 +133,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Phone Number"
         />
-        {errors.phone_number && <p className="text-red-500 text-xs italic">{errors.phone_number}</p>}
+        {errors.phone_number && <p className="text-red-500 text-xs italic mt-2">{errors.phone_number}</p>}
       </div>
 
       <div className="mb-4">
@@ -147,7 +147,7 @@ export default function RegisterForm({ onSubmit }: FormProps) {
           onChange={handleChange}
           placeholder="Salary"
         />
-        {errors.salary && <p className="text-red-500 text-xs italic">{errors.salary}</p>}
+        {errors.salary && <p className="text-red-500 text-xs italic mt-2">{errors.salary}</p>}
       </div>
 
       <div className="flex items-center justify-between">
