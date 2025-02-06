@@ -2,8 +2,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormData } from "./type";
-import { useState } from "react";
-import { z } from "zod";
+
 
 interface FormProps {
   onSubmit: (formData: FormData) => void;
