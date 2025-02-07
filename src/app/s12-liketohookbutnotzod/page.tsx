@@ -6,6 +6,7 @@ const api_endpoint = "http://127.0.0.1:8000/api/registeruser/";
 function page() {
   // Function to handle form submission
   const handleFormSubmit = async (data: FormData) => {
+    console.log("Form submitted with data:", data); // Debug log
     // Remove password_confirmation from the data before sending
     // const { password_confirmation, ...filteredData } = data;
     try {
@@ -30,6 +31,7 @@ function page() {
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Registration failed. Please try again.");
+      throw new Error("Network response was not ok");
     }
   };
   return (
