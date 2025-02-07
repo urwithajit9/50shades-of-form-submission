@@ -57,3 +57,9 @@ export const validatePhone = (phone: string) => {
   }
   return true;
 };
+
+// "Fix the form submission, it was due to validation funtion,
+//  it was returning "" that was working with other places
+// but React hook form needs either error message as string or true if there is no error,
+//  so reuturn "" was being treated as error message and due to blank nothing was being shown on
+//  screen and hence it was look like form not working"
