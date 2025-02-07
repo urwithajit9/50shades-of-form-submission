@@ -1,6 +1,6 @@
 // store/useFormStore.ts
 import { create } from "zustand";
-import { registerUser } from "@/app/s15-lethaveaction/actions/formActions"; // Import server action
+import { registerUser } from "@/app/s15-lethaveactiontogether/actions/formActions"; // Import server action
 import { FormData } from "../type";
 
 // Define Zustand store
