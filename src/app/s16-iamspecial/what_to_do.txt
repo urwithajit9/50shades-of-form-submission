@@ -1,0 +1,1 @@
+add code for checking avalbility of email .. email must be unique and not repeated in database, currently, if submission is made with existing email, it fails and user don't get any clue except submission fail msg

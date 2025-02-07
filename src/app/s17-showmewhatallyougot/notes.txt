@@ -1,0 +1,3 @@
+fetching all the data from the database and showing as cards
+
+later move to React-Query /Tanstack query
