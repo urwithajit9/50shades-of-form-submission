@@ -38,3 +38,16 @@ export async function registerUser(data: FormData) {
     };
   }
 }
+
+export async function checkEmailAvailability(email: string) {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/check-email?email=${email}`);
+    if (!res.ok) throw new Error("Failed to validate email");
+    
+    const data = await res.json();
+    return data.isAvailable; // Should return { available: true/false }
+  } catch (error) {
+    console.error("Error checking email:", error);
+    return false;
+  }
+}

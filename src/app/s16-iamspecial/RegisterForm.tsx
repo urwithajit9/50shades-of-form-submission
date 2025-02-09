@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { formSchema, FormData } from "./type";
-import { useFormStore } from "./store/useFormStore";
+import { useFormStore, useEmailStore } from "./store/useFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -9,6 +9,8 @@ export default function RegisterForm() {
   // Get submitForm from our global Zustand store.
   const { formData, updateField, submitForm, errors, isSubmitting } =
     useFormStore();
+    // const checkEmail = useEmailStore((state) => state.checkEmail);
+    const { checkEmail, isEmailAvailable } = useEmailStore();
 
   // Initialize react-hook-form with the Zod resolver
   const {
@@ -16,6 +18,7 @@ export default function RegisterForm() {
     handleSubmit,
     formState: { errors: formErrors },
     reset,
+    setError,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     // validation on change
@@ -28,6 +31,11 @@ export default function RegisterForm() {
   // When the form is submitted:
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      const isAvailable = await checkEmail(data.email);
+      if (!isAvailable) {
+        setError("email", { type: "manual", message: "Email already taken" });
+        return;
+      }
       // Call the Zustand store's submit function, which in turn calls the server action.
       await submitForm();
       // Only reset local RHF if submission succeeded (since the store clears formData on success).
@@ -166,6 +174,11 @@ export default function RegisterForm() {
         ) : errors.email ? (
           <p className="text-red-500 mt-2">{errors.email}</p>
         ) : null}
+        {isEmailAvailable !== null && (
+          <p className={isEmailAvailable ? "text-green-500" : "text-red-500"}>
+            {isEmailAvailable ? "✅ Email is available!" : "❌ Email already taken."}
+          </p>
+        )}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>
