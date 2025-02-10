@@ -33,12 +33,12 @@ const passwordSchema = z
 const emailSchmea = z
   .string()
   .min(1, "Email is required")
-  .email("Invalid email format")
-  .refine(async (email) => {
-    const res = await fetch(`http://127.0.0.1:8000/api/check-email?email=${email}`);
-    const data = await res.json();
-    return data.isAvailable; // API should return { available: true/false }
-  }, { message: "Email already taken from Zod" });
+  .email("Invalid email format");
+// .refine(async (email) => {
+//   const res = await fetch(`http://127.0.0.1:8000/api/check-email?email=${email}`);
+//   const data = await res.json();
+//   return data.isAvailable; // API should return { available: true/false }
+// }, { message: "Email already taken from Zod" });
 
 const nameSchema = z
   .string()

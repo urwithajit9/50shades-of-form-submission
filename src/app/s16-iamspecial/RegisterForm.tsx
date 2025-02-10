@@ -9,8 +9,10 @@ export default function RegisterForm() {
   // Get submitForm from our global Zustand store.
   const { formData, updateField, submitForm, errors, isSubmitting } =
     useFormStore();
-    // const checkEmail = useEmailStore((state) => state.checkEmail);
-    const { checkEmail, isEmailAvailable } = useEmailStore();
+
+  // Get email-related state and function from Zustand
+  const { checkEmail, isEmailValid, emailError, resetEmailStatus } =
+    useEmailStore();
 
   // Initialize react-hook-form with the Zod resolver
   const {
@@ -19,6 +21,7 @@ export default function RegisterForm() {
     formState: { errors: formErrors },
     reset,
     setError,
+    clearErrors,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     // validation on change
@@ -28,18 +31,61 @@ export default function RegisterForm() {
     defaultValues: formData,
   });
 
+  // onBlur handler for the email field to check availability
+  const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    // Call the async checkEmail from Zustand
+    await checkEmail(email);
+  };
+
+  // move below to store
+
+  // onBlur handler for email availability:
+  // const checkEmailAvailability = async (
+  //   e: React.FocusEvent<HTMLInputElement>
+  // ) => {
+  //   const email = e.target.value;
+  // Only proceed if email passes basic validation (or you can check manually here)
+  //   if (email && !formErrors.email) {
+  //     try {
+  //       const response = await fetch(
+  //         `http://127.0.0.1:8000/api/check-email?email=${encodeURIComponent(
+  //           email
+  //         )}`
+  //       );
+  //       const data = await response.json();
+  //       if (!data.isAvailable) {
+  //         setError("email", {
+  //           type: "manual",
+  //           message: "Email is already taken.",
+  //         });
+  //       } else {
+  //         clearErrors("email");
+  //       }
+  //     } catch (err) {
+  //       setError("email", {
+  //         type: "manual",
+  //         message: "Error checking email availability.",
+  //       });
+  //     }
+  //   }
+  // };
+
   // When the form is submitted:
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      const isAvailable = await checkEmail(data.email);
-      if (!isAvailable) {
-        setError("email", { type: "manual", message: "Email already taken" });
-        return;
-      }
+      // const isAvailable = await checkEmail(data.email);
+      // if (!isAvailable) {
+      //   setError("email", { type: "manual", message: "Email already taken" });
+      //   return;
+      // }
       // Call the Zustand store's submit function, which in turn calls the server action.
       await submitForm();
       // Only reset local RHF if submission succeeded (since the store clears formData on success).
+      const isAvailable = null; // to remove the email status message
       reset();
+      // Reset email availability state
+      resetEmailStatus();
     } catch (error) {
       console.error("Submission error:", error);
       // Errors are now synced in the Zustand store (accessible via errors)
@@ -97,6 +143,7 @@ export default function RegisterForm() {
   const combinedOnChangeForEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     emailOnChange(e); // Let react-hook-form update and validate
     handleChange("email")(e); // Update Zustand store for the "email" field
+    // const isAvailable = checkEmail(e.target.value);
   };
 
   const combinedOnChangeForSalary = (
@@ -168,17 +215,31 @@ export default function RegisterForm() {
           onChange={combinedOnChangeForEmail}
           type="text" // Change type to text for email to have error msg from zod instead of default popup message
           placeholder="Email"
+          onBlur={handleEmailBlur}
         />
-        {formErrors.email ? (
+        {/* {formErrors.email ? (
           <p className="text-red-500 mt-2">{formErrors.email.message}</p>
         ) : errors.email ? (
           <p className="text-red-500 mt-2">{errors.email}</p>
-        ) : null}
-        {isEmailAvailable !== null && (
-          <p className={isEmailAvailable ? "text-green-500" : "text-red-500"}>
-            {isEmailAvailable ? "✅ Email is available!" : "❌ Email already taken."}
+        ) : null} */}
+        {/* {isEmailValid !== null && (
+          <p className={isEmailValid ? "text-green-500" : "text-red-500"}>
+            {isEmailValid
+              ? "✅ Email is available!"
+              : "❌ Email already taken."}
           </p>
-        )}
+        )} */}
+        {/* Display errors:
+            - formErrors.email: errors from react-hook-form (format, required, etc.)
+            - emailError: error from Zustand's email check
+            - If email is valid, you can show a success message */}
+        {formErrors.email ? (
+          <p className="text-red-500 mt-2">{formErrors.email.message}</p>
+        ) : emailError ? (
+          <p className="text-red-500 mt-2">{emailError}</p>
+        ) : isEmailValid ? (
+          <p className="text-green-500 mt-2">Email is available</p>
+        ) : null}
       </div>
       <div className="mb-4">
         <label className={label_tailwind_classes}>

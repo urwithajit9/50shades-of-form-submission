@@ -7,25 +7,37 @@ import axios from "axios";
 
 interface EmailStore {
   isEmailValid: boolean | null;
-  checkEmail: (email: string) => Promise<boolean>;
+  emailError: string | null;
+  checkEmail: (email: string) => Promise<void>;
+  resetEmailStatus: () => void;
 }
 
 export const useEmailStore = create<EmailStore>((set) => ({
   isEmailValid: null,
-  checkEmail: async (email) => {
+  emailError: null,
+  checkEmail: async (email: string) => {
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/check-email?email=${email}`);
-      const isAvailable = response.data.isAvailable; // Assuming API returns { available: true/false }
-      set({ isEmailValid: isAvailable });
-      return isAvailable;
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/check-email?email=${email}`
+      );
+      const isAvailable = await response.data.isAvailable; // Assuming API returns { available: true/false }
+      if (!isAvailable) {
+        set({ isEmailValid: false, emailError: "Email is already taken" });
+      } else {
+        set({ isEmailValid: true, emailError: null });
+      }
     } catch (error) {
       console.error("Email validation error:", error);
-      set({ isEmailValid: false });
-      return false;
+      set({
+        isEmailValid: false,
+        emailError: "Error checking email availability",
+      });
     }
   },
+  resetEmailStatus: () => {
+    set({ isEmailValid: null, emailError: null });
+  },
 }));
-
 
 // Define Zustand store
 interface FormState {
