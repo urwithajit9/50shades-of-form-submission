@@ -68,3 +68,6 @@ export type FormData = z.infer<typeof formSchema>;
 //   phone_number: string;
 //   salary: string;
 // }
+export interface User extends FormData {
+  id: string; // Unique identifier for each user
+}

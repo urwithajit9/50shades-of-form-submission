@@ -1,11 +1,19 @@
 "use client";
-import React from "react";
-import { formSchema, FormData } from "./type";
-import { useFormStore } from "./store/useFormStore";
+import React, { useEffect } from "react";
+import { formSchema, FormData } from "../type";
+import { useFormStore } from "../store/useFormStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 
-export default function RegisterForm() {
+interface RegisterFormProps {
+  initialData?: FormData; // If provided, the form is in "edit" mode
+  onSubmit: (data: FormData) => Promise<void>;
+}
+
+export default function RegisterForm({
+  initialData,
+  onSubmit,
+}: RegisterFormProps) {
   // Get submitForm from our global Zustand store.
   const { formData, updateField, submitForm, errors, isSubmitting } =
     useFormStore();
@@ -22,11 +30,18 @@ export default function RegisterForm() {
     mode: "onChange", // Validate fields on every change
     reValidateMode: "onChange", // Revalidate on change (if necessary)
     // You can pre-populate default values from your Zustand store if needed:
-    defaultValues: formData,
+    defaultValues: initialData || formData,
   });
 
+  // If initialData changes, reset the form with the new data (useful for edit mode)
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData);
+    }
+  }, [initialData, reset]);
+
   // When the form is submitted:
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmitHandler: SubmitHandler<FormData> = async (data) => {
     try {
       // Call the Zustand store's submit function, which in turn calls the server action.
       await submitForm();
@@ -121,11 +136,11 @@ export default function RegisterForm() {
     "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmitHandler)}
       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
     >
       <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500">
-        Register
+        {initialData ? "Edit User" : "Register"}
       </h1>
       <div className="mb-4">
         <label className={label_tailwind_classes}>
@@ -263,7 +278,7 @@ export default function RegisterForm() {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "Register"}
+          {initialData ? "Update User" : "Register"}
         </button>
       </div>
       {errors.global && (
