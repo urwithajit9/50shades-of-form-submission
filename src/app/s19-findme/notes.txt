@@ -1,0 +1,2 @@
+Add a search and then user will input name, or email to search the registered user
+Next <Form> vs native form vs server actions
