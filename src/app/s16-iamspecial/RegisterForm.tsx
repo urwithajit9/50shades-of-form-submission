@@ -34,6 +34,7 @@ export default function RegisterForm() {
   // onBlur handler for the email field to check availability
   const handleEmailBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
     const email = e.target.value;
+    console.log(email)
     // Call the async checkEmail from Zustand
     await checkEmail(email);
   };
@@ -82,7 +83,7 @@ export default function RegisterForm() {
       // Call the Zustand store's submit function, which in turn calls the server action.
       await submitForm();
       // Only reset local RHF if submission succeeded (since the store clears formData on success).
-      const isAvailable = null; // to remove the email status message
+      // const isAvailable = null; // to remove the email status message
       reset();
       // Reset email availability state
       resetEmailStatus();

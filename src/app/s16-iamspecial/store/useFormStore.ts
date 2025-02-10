@@ -16,13 +16,17 @@ export const useEmailStore = create<EmailStore>((set) => ({
   isEmailValid: null,
   emailError: null,
   checkEmail: async (email: string) => {
+    console.log("In Zustand checkemail")
+    console.log(email)
     try {
       const response = await axios.get(
         `http://127.0.0.1:8000/api/check-email?email=${email}`
       );
       const isAvailable = await response.data.isAvailable; // Assuming API returns { available: true/false }
+      console.log(isAvailable)
       if (!isAvailable) {
         set({ isEmailValid: false, emailError: "Email is already taken" });
+        
       } else {
         set({ isEmailValid: true, emailError: null });
       }
