@@ -2,7 +2,8 @@
 "use client";
 
 import React from "react";
-import { useUserStore, User } from "../store/useUserStore";
+import { useUserStore } from "../store/useUserStore";
+import { User } from "../type";
 
 interface UserTableProps {
   onEdit: (user: User) => void;
