@@ -6,11 +6,12 @@ import { useUserStore } from "../store/useUserStore";
 import { User } from "../type";
 
 interface UserTableProps {
+  users?: User[];
   onEdit: (user: User) => void;
 }
 
-export default function UserTable({ onEdit }: UserTableProps) {
-  const { users, deleteUser } = useUserStore();
+export default function UserTable({ users, onEdit }: UserTableProps) {
+  const { deleteUser } = useUserStore();
 
   return (
     <table className="min-w-full border-collapse">
@@ -24,7 +25,7 @@ export default function UserTable({ onEdit }: UserTableProps) {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
+        {users?.map((user) => (
           <tr key={user.id} className="text-center">
             <td className="border p-2">{user.name}</td>
             <td className="border p-2">{user.email}</td>

@@ -8,14 +8,20 @@ import UserCards from "./UserCards";
 import RegisterForm from "./RegisterForm";
 import { User, FormData } from "../type";
 
+import { useQuery } from "@tanstack/react-query";
+import { fetchRepos } from "../lib/getData";
+
 export default function UserList() {
-  const { fetchUsers } = useUserStore();
   const [viewMode, setViewMode] = useState<"table" | "card">("table");
   const [editingUser, setEditingUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["registeredUsers"], // Unique key for caching
+    queryFn: fetchRepos, // API fetching function
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error fetching data</p>;
 
   // Callback for edit: load selected user into the form
   const handleEdit = (user: User) => {
@@ -62,9 +68,9 @@ export default function UserList() {
 
       {/* Display users in the selected view */}
       {viewMode === "table" ? (
-        <UserTable onEdit={handleEdit} />
+        <UserTable users={data} onEdit={handleEdit} />
       ) : (
-        <UserCards onEdit={handleEdit} />
+        <UserCards users={data} onEdit={handleEdit} />
       )}
     </div>
   );

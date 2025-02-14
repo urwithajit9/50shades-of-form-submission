@@ -6,15 +6,16 @@ import { useUserStore } from "../store/useUserStore";
 import { User } from "../type";
 
 interface UserCardsProps {
+  users?: User[];
   onEdit: (user: User) => void;
 }
 
-export default function UserCards({ onEdit }: UserCardsProps) {
-  const { users, deleteUser } = useUserStore();
+export default function UserCards({ users, onEdit }: UserCardsProps) {
+  const { deleteUser } = useUserStore();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {users.map((user) => (
+      {users?.map((user) => (
         <div key={user.id} className="border p-4 rounded shadow-md">
           <p>
             <strong>Name:</strong> {user.name}
