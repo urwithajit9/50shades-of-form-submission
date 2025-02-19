@@ -2,12 +2,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema, FormData } from "./type";
+import { createUser } from "./actions/submitToDB";
 
-
-interface FormProps {
-  onSubmit: (formData: FormData) => void;
-}
-export default function RegisterForm({ onSubmit }: FormProps) {
+export default function RegisterForm() {
   const {
     register,
     handleSubmit,
@@ -22,7 +19,8 @@ export default function RegisterForm({ onSubmit }: FormProps) {
   const internalSubmit = async (data: FormData) => {
     let success = false;
     try {
-      await onSubmit(data);
+      // await onSubmit(data);
+      await createUser(data);
       console.log("Form submitted successfully!");
       success = true;
       console.log(success);
