@@ -1,0 +1,4 @@
+Kysely (pronounced “Key-Seh-Lee”) is a type-safe and autocompletion-friendly TypeScript SQL query builder. Inspired by Knex. Mainly developed for node.js but also runs on all other JavaScript environments like deno and bun.
+
+
+https://kysely.dev/docs/intro
